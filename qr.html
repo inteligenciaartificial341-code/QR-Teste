@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerar QR Code</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Biblioteca gratuita que desenha o QR Code -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@2.0.4/dist/qrcode.js"></script>
+</head>
+<body>
+  <main class="qr-pagina">
+    <h1>Gerar QR Code</h1>
+    <p class="sub">Abra esta página no computador e aponte a câmera do celular para o código.</p>
+
+    <label>
+      Nome do arquivo do modelo (sem o .glb)
+      <input id="campo-nome" type="text" value="teste" autocomplete="off" autocapitalize="off" spellcheck="false">
+    </label>
+
+    <label>
+      Título que aparece na página (opcional)
+      <input id="campo-titulo" type="text" placeholder="Ex.: Boné preto" autocomplete="off">
+    </label>
+
+    <div class="qr-caixa">
+      <canvas id="qr-canvas" width="400" height="460"></canvas>
+    </div>
+
+    <p class="qr-link">Endereço: <a id="qr-url" href="#" target="_blank" rel="noopener"></a></p>
+
+    <div class="qr-botoes">
+      <button id="botao-baixar">Baixar PNG</button>
+      <button id="botao-demo" class="sec">QR do exemplo</button>
+    </div>
+  </main>
+
+  <script src="js/qr.js"></script>
+</body>
+</html>

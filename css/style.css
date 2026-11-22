@@ -1,0 +1,182 @@
+/* ===== Cores e medidas usadas no site todo ===== */
+:root {
+  --fundo: #0f1115;
+  --fundo-2: #181b22;
+  --texto: #f2f3f5;
+  --texto-2: #9aa1ad;
+  --destaque: #ffb020;      /* cor do botão principal */
+  --destaque-texto: #1a1300;
+  --erro: #ff6b6b;
+  --raio: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  background: radial-gradient(120% 80% at 50% 0%, #1d212b 0%, var(--fundo) 60%);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== Topo ===== */
+.topo {
+  padding: max(18px, env(safe-area-inset-top)) 20px 6px;
+  text-align: center;
+}
+.topo h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: .2px; }
+.sub { color: var(--texto-2); font-size: .9rem; margin-top: 4px; }
+
+/* ===== Área do modelo 3D ===== */
+.palco {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 60dvh;
+}
+
+model-viewer {
+  flex: 1;
+  width: 100%;
+  min-height: 60dvh;
+  background: transparent;
+  --poster-color: transparent;
+}
+
+/* Barra de carregamento */
+.progresso {
+  position: absolute;
+  left: 50%; bottom: 96px;
+  transform: translateX(-50%);
+  width: 55%; height: 6px;
+  background: rgba(255,255,255,.12);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progresso.oculto { opacity: 0; transition: opacity .4s; }
+.progresso-barra {
+  height: 100%; width: 0%;
+  background: var(--destaque);
+  transition: width .2s;
+}
+
+/* Botão "Ver na minha mesa" */
+.botao-ar {
+  position: absolute;
+  left: 50%; bottom: max(22px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px;
+  padding: 15px 26px;
+  border: 0; border-radius: 99px;
+  background: var(--destaque);
+  color: var(--destaque-texto);
+  font-size: 1.05rem; font-weight: 700;
+  box-shadow: 0 8px 28px rgba(255,176,32,.35);
+  cursor: pointer;
+  white-space: nowrap;
+  animation: pulsar 2.4s ease-in-out infinite;
+}
+.botao-ar:active { transform: translateX(-50%) scale(.97); }
+
+@keyframes pulsar {
+  0%, 100% { box-shadow: 0 8px 28px rgba(255,176,32,.35); }
+  50%      { box-shadow: 0 8px 40px rgba(255,176,32,.6); }
+}
+
+/* ===== Avisos ===== */
+.aviso {
+  background: var(--fundo-2);
+  border-radius: var(--raio);
+  padding: 14px 16px;
+  color: var(--texto-2);
+  font-size: .92rem;
+  line-height: 1.45;
+  text-align: center;
+}
+.aviso a { color: var(--destaque); }
+
+.aviso-erro {
+  position: absolute;
+  inset: auto 16px 24px 16px;
+  border: 1px solid rgba(255,107,107,.35);
+  color: var(--texto);
+}
+.aviso-erro p { margin-bottom: 12px; }
+.aviso-erro code {
+  background: rgba(255,255,255,.08);
+  padding: 2px 6px; border-radius: 6px;
+}
+
+.botao-sec {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 99px;
+  border: 1px solid var(--destaque);
+  color: var(--destaque);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ===== Rodapé ===== */
+.rodape {
+  padding: 10px 16px max(16px, env(safe-area-inset-bottom));
+  display: grid; gap: 10px;
+}
+.info {
+  color: #5d6470;
+  font-size: .75rem;
+  text-align: center;
+}
+
+/* ===== Página do QR Code (qr.html) ===== */
+.qr-pagina {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 28px 20px 40px;
+  display: grid; gap: 18px;
+}
+.qr-pagina h1 { font-size: 1.4rem; }
+.qr-pagina label { color: var(--texto-2); font-size: .9rem; display: grid; gap: 6px; }
+.qr-pagina input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #2a2f3a;
+  background: var(--fundo-2);
+  color: var(--texto);
+  font-size: 1rem;
+}
+.qr-caixa {
+  background: #fff;
+  border-radius: var(--raio);
+  padding: 18px;
+  display: grid; place-items: center;
+}
+.qr-caixa canvas { width: 100%; max-width: 320px; height: auto; image-rendering: pixelated; }
+.qr-link {
+  word-break: break-all;
+  font-size: .85rem;
+  color: var(--texto-2);
+}
+.qr-link a { color: var(--destaque); }
+.qr-botoes { display: flex; gap: 10px; flex-wrap: wrap; }
+.qr-botoes button {
+  flex: 1;
+  padding: 13px 16px;
+  border-radius: 99px;
+  border: 0;
+  background: var(--destaque);
+  color: var(--destaque-texto);
+  font-weight: 700; font-size: 1rem;
+  cursor: pointer;
+}
+.qr-botoes button.sec {
+  background: transparent;
+  border: 1px solid var(--destaque);
+  color: var(--destaque);
+}

@@ -1,0 +1,8 @@
+Coloque nesta pasta os arquivos 3D escaneados.
+
+- teste.glb   -> abre em  index.html
+- bone.glb    -> abre em  index.html?m=bone
+- bone.usdz   -> (opcional) versão para iPhone; se não tiver, o site converte o .glb sozinho
+
+Regras do nome: só letras minúsculas, números, - ou _ (sem acento, sem espaço).
+Tamanho ideal: até 8 MB por arquivo, para abrir rápido no 4G.
