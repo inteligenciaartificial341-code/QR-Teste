@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio 3D</title>
+<!-- model-viewer: componente grátis do Google que mostra o 3D e abre a realidade aumentada do próprio celular -->
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #faf7f2; color: #2b2118; }
+  header { padding: 20px 16px 12px; background: #2b2118; color: #faf7f2; }
+  header h1 { font-size: 22px; }
+  header p { font-size: 14px; opacity: .8; margin-top: 4px; }
+  .lista { padding: 12px 16px 100px; display: grid; gap: 12px; }
+  .item { background: #fff; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .item h2 { font-size: 16px; }
+  .item p { font-size: 13px; color: #6b5d50; margin-top: 2px; }
+  .item .preco { font-weight: 700; margin-top: 6px; }
+  .btn { border: 0; border-radius: 10px; padding: 10px 12px; font-weight: 600; font-size: 14px; cursor: pointer; }
+  .btn-3d { background: #c8553d; color: #fff; }
+  .tela { position: fixed; inset: 0; background: #faf7f2; display: none; flex-direction: column; z-index: 10; }
+  .tela.aberta { display: flex; }
+  .topo { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; }
+  .topo h2 { font-size: 18px; }
+  .btn-fechar { background: #e8e1d8; color: #2b2118; }
+  model-viewer { flex: 1; width: 100%; background: #efe9e1; }
+  .btn-ar { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); background: #2b2118; color: #fff; padding: 14px 20px; border-radius: 12px; font-size: 15px; font-weight: 700; border: 0; }
+  .rodape { padding: 14px 16px; display: flex; gap: 10px; }
+  .rodape .btn { flex: 1; padding: 14px; }
+  .btn-pedir { background: #c8553d; color: #fff; }
+  .btn-garcom { background: #e8e1d8; color: #2b2118; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Cardápio</h1>
+  <p id="mesa">Mesa —</p>
+</header>
+
+<div class="lista" id="lista"></div>
+
+<!-- Tela do prato em 3D -->
+<div class="tela" id="tela">
+  <div class="topo">
+    <h2 id="nomePrato"></h2>
+    <button class="btn btn-fechar" onclick="fechar()">Fechar</button>
+  </div>
+  <model-viewer id="visor" camera-controls auto-rotate ar ar-modes="webxr scene-viewer quick-look" shadow-intensity="1" touch-action="pan-y">
+    <button slot="ar-button" class="btn-ar">📱 Ver na minha mesa</button>
+  </model-viewer>
+  <div class="rodape">
+    <button class="btn btn-garcom" onclick="chamarGarcom()">Chamar garçom</button>
+    <button class="btn btn-pedir" onclick="pedir()">Pedir este prato</button>
+  </div>
+</div>
+
+<script>
+  // ===== 1) LISTA DE PRATOS =====
+  // Para trocar: mude nome, descrição, preço e o caminho do arquivo 3D (.glb).
+  // O modelo de exemplo (astronauta) é só para testar; troque pelo seu escaneamento.
+  const EXEMPLO = "https://modelviewer.dev/shared-assets/models/Astronaut.glb";
+  const pratos = [
+    { id: "p1", nome: "Croissant recheado", desc: "Massa folhada, creme de pistache", preco: 24.90, modelo: EXEMPLO },
+    { id: "p2", nome: "Hambúrguer da casa", desc: "Blend 180 g, queijo, cebola caramelizada", preco: 39.90, modelo: EXEMPLO },
+    { id: "p3", nome: "Petit gâteau", desc: "Com sorvete de baunilha", preco: 29.90, modelo: EXEMPLO }
+  ];
+
+  // ===== 2) NÚMERO DA MESA =====
+  // O QR Code de cada mesa abre o endereço com ?mesa=01, ?mesa=02...
+  // Assim todo pedido já sai marcado com a mesa (é isso que liga depois com o sistema de câmeras).
+  const mesa = new URLSearchParams(location.search).get("mesa") || "sem número";
+  document.getElementById("mesa").textContent = "Mesa " + mesa;
+
+  // ===== 3) MONTA A LISTA NA TELA =====
+  const lista = document.getElementById("lista");
+  pratos.forEach(p => {
+    lista.insertAdjacentHTML("beforeend", `
+      <div class="item">
+        <div>
+          <h2>${p.nome}</h2>
+          <p>${p.desc}</p>
+          <p class="preco">R$ ${p.preco.toFixed(2).replace(".", ",")}</p>
+        </div>
+        <button class="btn btn-3d" onclick="abrir('${p.id}')">Ver em 3D</button>
+      </div>`);
+  });
+
+  let pratoAtual = null;
+  function abrir(id) {
+    pratoAtual = pratos.find(p => p.id === id);
+    document.getElementById("nomePrato").textContent = pratoAtual.nome;
+    document.getElementById("visor").src = pratoAtual.modelo;
+    document.getElementById("tela").classList.add("aberta");
+  }
+  function fechar() { document.getElementById("tela").classList.remove("aberta"); }
+
+  // ===== 4) PEDIDO E GARÇOM (por enquanto só aviso na tela) =====
+  // Próxima etapa: enviar isso para a tela da cozinha / recepção (Firebase).
+  function pedir() { alert(`Pedido de "${pratoAtual.nome}" — Mesa ${mesa}\n(teste: ainda não envia para a cozinha)`); }
+  function chamarGarcom() { alert(`Garçom chamado — Mesa ${mesa}\n(teste: ainda não avisa a equipe)`); }
+</script>
+</body>
+</html>
